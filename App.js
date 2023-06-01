@@ -57,7 +57,8 @@ class App extends Component {
         <NavigationContainer>
           <Stack.Navigator
             screenOptions={{headerShown: false}}
-            initialRouteName="Home">
+            // initialRouteName="Home"
+          >
             <Stack.Screen name="Swipers" component={Swipers} />
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Otp" component={Otp} />
