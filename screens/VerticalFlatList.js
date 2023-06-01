@@ -2,59 +2,49 @@ import React, {Component} from 'react';
 import {View, Text, Dimensions, Image} from 'react-native';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {FlatList} from 'react-native-gesture-handler';
-const Data = [
-  {
-    id: 1,
-    name: 'Orange',
-    tag: 'fruit & vegetable',
-    qunat: '1 kg',
-    url: require('../Images/orange.jpg'),
-    // price: '120 ₹',
-    // url:require('../Images/avocado')
-  },
-  {
-    id: 2,
-    name: ' Pomogranate',
-    tag: 'fruit & vegetable',
-    qunat: '1 kg',
-    price: '120 ₹',
-    url: require('../Images/pomegranate.jpg'),
-    // url: require('../Images/'),
-  },
-  {
-    id: 3,
-    name: 'Berry',
-    tag: 'fruit & vegetable',
-    qunat: '1 kg',
-    price: '120 ₹',
-    url: require('../Images/fruits1.jpg'),
-  },
-  {
-    id: 4,
-    name: 'Kiwi',
-    tag: 'fruit & vegetable',
-    qunat: '1 kg',
-    price: '120 ₹',
-    url: require('../Images/kiwi.jpg'),
-  },
-  {
-    id: 5,
-    name: 'Lemon',
-    tag: 'fruit & vegetable',
-    qunat: '1 kg',
-    price: '120 ₹',
-    url: require('../Images/lemon.jpg'),
-  },
-  {
-    id: 6,
-    name: 'Strawberries',
-    tag: 'fruit & vegetable',
-    qunat: '1 kg',
-    price: '120 ₹',
-    url: require('../Images/strawberries.jpg'),
-  },
-];
+
 export default class VerticalFlatList extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      more: [],
+      isloading: true,
+    };
+  }
+  // componentDidMount() {
+  //   this.fetch_category();
+  // }
+  // fetch_category = () => {
+  //   fetch(global.api_key + 'get-jwellery-category-web', {
+  //     method: 'GET',
+  //     // body: JSON.stringify({}),
+  //     headers: {
+  //       Accept: 'application/json',
+  //       'Content-Type': 'application/json',
+  //     },
+  //   })
+  //     .then(response => response.json())
+  //     .then(json => {
+  //       if (json.status) {
+  //         this.setState({
+  //           more: json.categorie,
+  //         });
+  //         console.warn(this.state.more);
+  //       } else {
+  //         this.setState({
+  //           more: [],
+  //         });
+  //       }
+  //     })
+  //     .catch(error => {
+  //       console.warn(error);
+  //     })
+  //     .finally(() => {
+  //       this.setState({
+  //         isloading: false,
+  //       });
+  //     });
+  // };
   renderListItemsMenu = ({item}) => (
     <View
       style={{
@@ -80,7 +70,6 @@ export default class VerticalFlatList extends Component {
           marginTop: 30,
           shadowColor: 'black',
           elevation: 10,
-
           width: Dimensions.get('screen').width / 2.4,
           height: Dimensions.get('screen').height / 4.9,
         }}>
@@ -93,14 +82,13 @@ export default class VerticalFlatList extends Component {
             height: Dimensions.get('screen').height / 5,
             // marginBottom: 3,
           }}
-          source={item.url}
+          source={{uri: global.img_url + item.img_link}}
         />
       </View>
       <View
         style={{
           justifyContent: 'center',
           alignItems: 'center',
-
           width: Dimensions.get('screen').width / 2.4,
           shadowColor: 'black',
           elevation: 5,
@@ -113,7 +101,7 @@ export default class VerticalFlatList extends Component {
           }}>
           {item.name}
         </Text>
-        <Text
+        {/* <Text
           style={{
             paddingHorizontal: 10,
             textAlign: 'center',
@@ -121,8 +109,8 @@ export default class VerticalFlatList extends Component {
             fontSize: RFValue(10, 580),
             color: 'black',
           }}>
-          {item.tag}
-        </Text>
+          {item.price}
+        </Text> */}
       </View>
     </View>
   );
@@ -135,14 +123,9 @@ export default class VerticalFlatList extends Component {
           keyExtractor={item => {
             '#' + item.id;
           }}
-          data={Data}
+          data={this.state.more}
           numColumns={2}
-          renderItem={
-            this.renderListItemsMenu
-            // this.state.toogle_categories
-            //   ? this.renderListItems
-            //   : this.renderListItemsMenu
-          }
+          renderItem={this.renderListItemsMenu}
         />
       </View>
     );

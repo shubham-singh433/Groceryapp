@@ -30,7 +30,7 @@ class Home extends Component {
       })
         .then(response => response.json())
         .then(json => {
-          alert(json);
+          console.warn(json);
           if (json.status) {
             this.setState({
               featured: json.category,
@@ -62,7 +62,7 @@ class Home extends Component {
       style={{
         flexDirection: 'row',
         width: Dimensions.get('screen').width / 2,
-        justifyContent: 'space-between',
+        justifyContent: 'space-evenly',
         alignItems: 'flex-start',
         marginLeft: 5,
         // backgroundColor: 'red',
@@ -77,7 +77,7 @@ class Home extends Component {
             fontFamily: 'PTSans-Bold',
             color: 'black',
           }}>
-          Hellonjnn
+          Hello
           {/* ,{this.props.user} */}
         </Text>
         <Text
@@ -101,7 +101,6 @@ class Home extends Component {
           // alignSelf: 'flex-end',
           width: Dimensions.get('screen').width / 4,
           justifyContent: 'space-around',
-
           // backgroundColor: 'red',
         }}>
         <View
@@ -110,21 +109,28 @@ class Home extends Component {
             alignSelf: 'center',
             // backgroundColor: 'red',
           }}>
-          <Icon
-            name="happy-outline"
-            type="ionicon"
-            size={28}
-
-            // color={'yellow'}
-          />
+          <Pressable
+            onPress={() => {
+              this.props.navigation.navigate('Notification');
+            }}>
+            <Icon
+              name="notifications"
+              type="ionicon"
+              size={28}
+              color={'gold'}
+            />
+          </Pressable>
         </View>
 
-        <View>
+        <View
+          style={{
+            justifyContent: 'center',
+          }}>
           <Pressable
             onPress={() => {
               this.props.navigation.navigate('Cart');
             }}>
-            <Icon name="shopping-bag" tyoe="ionicon" size={28} />
+            <Icon name="shopping-cart" tyoe="Feather" size={28} />
           </Pressable>
         </View>
       </View>
@@ -140,10 +146,12 @@ class Home extends Component {
             containerStyle={{
               justifyContent: 'center',
               paddingHorizontal: 0,
-              backgroundColor: '#47b55f',
+              backgroundColor: '#e6e6eb',
               // backgroundColor: '#fff',
               borderRadius: 20,
               alignContent: 'center',
+              shadowColor: 'black',
+              elevation: 8,
               // height: Dimensions.get('screen').height / 10,
             }}
           />
@@ -206,7 +214,7 @@ class Home extends Component {
             }}>
             <Text
               style={{
-                fontSize: RFValue(16, 580),
+                fontSize: RFValue(15, 580),
                 color: 'black',
                 fontFamily: 'PTSans-Bold',
               }}>
@@ -214,7 +222,7 @@ class Home extends Component {
             </Text>
             <Icon name="arrow-forward-outline" type="ionicon" size={30} />
           </View>
-          <HorizontalFlatList />
+          <HorizontalFlatList navigation={this.props.navigation} />
           <View
             style={{
               flexDirection: 'row',
@@ -224,11 +232,11 @@ class Home extends Component {
             }}>
             <Text
               style={{
-                fontSize: RFValue(16, 580),
+                fontSize: RFValue(15, 580),
                 color: 'black',
                 fontFamily: 'PTSans-Bold',
               }}>
-              Exclusive Offers
+              Exclusive Products
             </Text>
             <Icon name="arrow-forward-outline" type="ionicon" size={30} />
           </View>
@@ -242,11 +250,11 @@ class Home extends Component {
             }}>
             <Text
               style={{
-                fontSize: RFValue(16, 580),
+                fontSize: RFValue(15, 580),
                 color: 'black',
                 fontFamily: 'PTSans-Bold',
               }}>
-              More Offers
+              All Products
             </Text>
             <Icon name="arrow-forward-outline" type="ionicon" size={30} />
           </View>
@@ -258,9 +266,12 @@ class Home extends Component {
 }
 export default Home;
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#FF5236',
+  },
   header: {
     width: Dimensions.get('screen').width / 2,
-
     alignItems: 'flex-end',
     justifyContent: 'center',
     // justifyContent: 'center',

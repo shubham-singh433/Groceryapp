@@ -27,6 +27,19 @@ class Signup extends Component {
           <Headers navigation={this.props.navigation} />
           <View
             style={{
+              // backgroundColor: 'red'
+              justifyContent: 'flex-end',
+            }}>
+            <Image
+              source={require('../Images/signup.png')}
+              style={{
+                height: Dimensions.get('screen').height / 3,
+                width: Dimensions.get('screen').width / 1,
+              }}
+            />
+          </View>
+          <View
+            style={{
               width: Dimensions.get('screen').width / 1.2,
               paddingTop: 20,
               justifyContent: 'center',
@@ -45,6 +58,7 @@ class Signup extends Component {
               {this.state.number}
             </Text>
           </View>
+
           <View
             style={{
               flexDirection: 'row',
@@ -110,7 +124,7 @@ class Signup extends Component {
                 height: Dimensions.get('screen').height / 16,
                 justifyContent: 'center',
                 alignItems: 'center',
-                borderRadius: 10,
+                borderRadius: 50,
               }}>
               <Text
                 style={{

@@ -22,30 +22,37 @@ import TopNav from './screens/TopNav';
 import Orders from './screens/Orders';
 import FoodScreen from './screens/FoodScreen';
 import Filter from './screens/Filter';
+import Products from './screens/Products';
 const Stack = createNativeStackNavigator();
 
 global.google_key = 'AIzaSyAb52gzLmGK62in6hPYwulzvjK6xho5sk8';
 global.api_key = 'https://api.kiranmegamarket.in/api/';
 global.img_url = 'https://cdn.kiranmegamarket.in/';
 class App extends Component {
-  componentDidMount() {
-    setTimeout = () => {
-      {
-        SplashScreen.hide(), 3000;
-      }
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoading: true,
     };
   }
+
+  componentDidMount() {
+    setTimeout(() => {
+      SplashScreen.hide();
+    }, 3000);
+  }
+
   render() {
+    // <NavigationContainer>
+    //    <Stack.Navigator
+    //     initialRouteName="Otp"
+    //     screenOptions={{headerShown: false}}></Stack.Navigator>
+    //   {/* <Swipers />
+    //   {/* <Signup /> */}
+    //   {/* <Otp /> */}
+    //   {/* // <CreateNew />  */}
+    // <NavigationContainer/>
     return (
-      // <NavigationContainer>
-      //    <Stack.Navigator
-      //     initialRouteName="Otp"
-      //     screenOptions={{headerShown: false}}></Stack.Navigator>
-      //   {/* <Swipers />
-      //   {/* <Signup /> */}
-      //   {/* <Otp /> */}
-      //   {/* // <CreateNew />  */}
-      // <NavigationContainer/>
       <View style={{flex: 1}}>
         <NavigationContainer>
           <Stack.Navigator
@@ -105,6 +112,11 @@ class App extends Component {
               component={Filter}
               navigation={this.props.navigation}
             />
+            {/* <Stack.Screen
+              name="Products"
+              component={Products}
+              navigation={this.props.navigation}
+            /> */}
             {/* <Stack.Screen
               name="Orders"
               component={Orders}

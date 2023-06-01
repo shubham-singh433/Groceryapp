@@ -9,6 +9,7 @@ import Search from './Search';
 import Favourite from './Favourite';
 import Profile from './Profile';
 import Orders from './Orders';
+import Products from './Products';
 
 const Tab = createBottomTabNavigator();
 
@@ -17,7 +18,7 @@ class TabNav extends Component {
     return (
       <Tab.Navigator
         screenOptions={({route}) => ({
-          initialRouteName: 'Search',
+          initialRouteName: 'Products',
           tabBarStyle: {
             backgroundColor: 'white',
           },
@@ -49,14 +50,6 @@ class TabNav extends Component {
                   color={focused ? '#50eb71' : 'black'}
                 />
               );
-            } else if (route.name == 'Notification') {
-              return (
-                <Icon
-                  name="notifications-outline"
-                  type="ionicon"
-                  color={focused ? '#50eb71' : 'black'}
-                />
-              );
             } else if (route.name == 'Profile') {
               return (
                 <Icon
@@ -73,6 +66,14 @@ class TabNav extends Component {
                   color={focused ? '#50eb71' : 'black'}
                 />
               );
+            } else if (route.name == 'Products') {
+              return (
+                <Icon
+                  name="grid-outline"
+                  type="ionicon"
+                  color={focused ? '#50eb71' : 'black'}
+                />
+              );
             }
             return (
               <Icon name={iconName} color={color} type="ionicon" size={22} />
@@ -82,9 +83,13 @@ class TabNav extends Component {
         <Tab.Screen name="Home" component={Home} />
         <Tab.Screen name="Search" component={Search} />
         <Tab.Screen name="Favourite" component={Favourite} />
-        <Tab.Screen name="Notification" component={Notification} />
         <Tab.Screen name="Profile" component={Profile} />
         <Tab.Screen name="Orders" component={Orders} />
+        <Tab.Screen
+          name="Products"
+          component={Products}
+          navigation={this.props.navigation}
+        />
       </Tab.Navigator>
     );
   }

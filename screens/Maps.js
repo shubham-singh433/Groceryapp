@@ -62,14 +62,15 @@ class Maps extends Component {
             zIndex: 2,
             flexDirection: 'row',
             // alignSelf: 'flex-start',
-            justifyContent: 'space-between',
+            justifyContent: 'space-around',
             width: Dimensions.get('screen').width / 1.1,
+            alignItems: 'center',
           }}>
           <Pressable
             onPress={() => {
               this.props.navigation.navigate('Home');
             }}>
-            <Icon name="chevron-back-outline" type="ionicon" size={30} />
+            <Icon name="chevron-back-outline" type="ionicon" size={32} />
           </Pressable>
           <GooglePlacesAutocomplete
             placeholder="Search "
@@ -95,19 +96,16 @@ class Maps extends Component {
               },
               listView: {
                 color: 'black', //To see where exactly the list is
-                zIndex: 1000, //To popover the component outwards
+                zIndex: 1, //To popover the component outwards
                 position: 'absolute',
                 top: 55,
                 width: Dimensions.get('screen').width / 1.3,
               },
               textInputContainer: {
-                zIndex: 1000,
-                // position: 'absolute',
-                // top: 25,
-                width: Dimensions.get('screen').width / 1.3,
+                zIndex: 1,
+                width: Dimensions.get('screen').width / 1.18,
               },
             }}
-            // onFail={error => console.error(error)}
           />
         </View>
 

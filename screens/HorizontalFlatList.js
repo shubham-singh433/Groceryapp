@@ -56,12 +56,10 @@ export default class HorizontalFlatList extends Component {
   }
   componentDidMount() {
     this.fetch_category();
-    // this.focusListener = this.props.navigation.addListener('focus', () => {
-    //   this.fetch_category();
-    // });
   }
+
   fetch_category = () => {
-    fetch(global.api_key + 'get-jwellery-category-web', {
+    fetch(global.api_key + 'fetch-home-data-web', {
       method: 'GET',
       headers: {
         Accept: 'application/json',
@@ -70,7 +68,7 @@ export default class HorizontalFlatList extends Component {
     })
       .then(response => response.json())
       .then(json => {
-        console.log(json);
+        // console.warn('data', json);
         if (json.status) {
           this.setState({
             featured: json.category,
@@ -97,17 +95,16 @@ export default class HorizontalFlatList extends Component {
         width: Dimensions.get('screen').width / 4.29,
         height: Dimensions.get('screen').height / 8,
         alignSelf: 'center',
-
         alignItems: 'center',
         justifyContent: 'center',
       }}>
       <Pressable
-        onPress={() => {
-          Alert.alert('sorry');
-        }}>
+        onPress={() =>
+          this.props.navigation.navigate('Products', {link: item.link})
+        }>
         <View
           style={{
-            backgroundColor: item.color,
+            borderWidth: 1,
             width: Dimensions.get('screen').width / 5,
             height: Dimensions.get('screen').height / 10,
             alignItems: 'center',
@@ -118,15 +115,16 @@ export default class HorizontalFlatList extends Component {
           <Image
             source={{uri: global.img_url + item.image}}
             style={{
-              width: '60%',
-              height: '50%',
+              width: '80%',
+              height: '60%',
             }}
           />
         </View>
       </Pressable>
+
       <Text
         style={{
-          fontSize: RFValue(10, 580),
+          fontSize: RFValue(9, 580),
           fontFamily: 'PTSans-Bold',
           color: 'black',
         }}>

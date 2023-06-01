@@ -7,6 +7,49 @@ import {Header} from 'react-native-elements';
 import MoreOffers from './MoreOffers';
 
 class OrderDetails extends Component {
+  constructor(props) {
+    super(props);
+    console.warn(this.props);
+    this.state = {
+      search: '',
+      liked: false,
+      liked_items: [],
+      subcategory_link: this.props.route.params.link,
+    };
+  }
+
+  componentDidMount() {
+    this.fetchDetails(this.props.route.params.link);
+    // console.warn(this.props.route.params.link);
+  }
+
+  fetchDetails = e => {
+    console.warn('Fetching details', e);
+    fetch(global.api_key + 'get-product-list-web', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        category_link: 'all',
+        subcategory_link: e,
+      }),
+    })
+      .then(response => response.json())
+      .then(json => {
+        console.warn('productlist', json.data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+      .finally(() => {
+        this.setState({
+          isloading: false,
+        });
+      });
+  };
+
   renderLeftComponent = () => {
     return (
       <View style={{flexDirection: 'row', alignItems: 'center', width: 200}}>

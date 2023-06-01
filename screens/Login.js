@@ -14,8 +14,8 @@ export default class Login extends Component {
             // alignSelf: 'center',
             alignItems: 'center',
             justifyContent: 'space-evenly',
-            height: Dimensions.get('screen').height / 1.8,
-            backgroundColor: '#adb2b3',
+            height: Dimensions.get('screen').height / 1.6,
+            backgroundColor: '#f0f0f5',
             width: Dimensions.get('screen').width / 1,
           }}>
           <View
@@ -25,13 +25,17 @@ export default class Login extends Component {
             }}>
             <Image
               source={require('../android/app/src/main/res/drawable/logo.png')}
+              style={{
+                height: Dimensions.get('screen').height / 5,
+                width: Dimensions.get('screen').width / 1,
+              }}
             />
           </View>
           <View
             style={{
               justifyContent: 'center',
               alignItems: 'center',
-              paddingTop: 10,
+              paddingTop: 8,
             }}>
             <Pressable
               onPress={() => {
@@ -43,12 +47,12 @@ export default class Login extends Component {
                 height: Dimensions.get('screen').height / 16,
                 justifyContent: 'center',
                 alignItems: 'center',
-                borderRadius: 10,
+                borderRadius: 50,
               }}>
               <Text
                 style={{
                   color: 'white',
-                  fontSize: RFValue(18, 580),
+                  fontSize: RFValue(20, 580),
                   fontFamily: 'PTSans-Bold',
                 }}>
                 Login
@@ -60,7 +64,7 @@ export default class Login extends Component {
           style={{
             height: Dimensions.get('screen').height / 2.3,
             width: Dimensions.get('screen').width / 1,
-            backgroundColor: '#adb2b3',
+            backgroundColor: '#f0f0f5',
             justifyContent: 'center',
             alignItems: 'center',
           }}>
@@ -69,7 +73,7 @@ export default class Login extends Component {
             style={{
               height: Dimensions.get('screen').height / 2.3,
               width: Dimensions.get('screen').width / 1,
-              opacity: 0.3,
+              opacity: 0.4,
             }}
           />
         </View>

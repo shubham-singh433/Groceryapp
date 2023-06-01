@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Pressable,
   Alert,
+  Image,
 } from 'react-native';
 import {Header, Icon} from 'react-native-elements';
 import {Dimensions} from 'react-native';
@@ -17,7 +18,7 @@ class Otp extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      countdown: false,
+      countdown: true,
     };
   }
   renderCentralComponent = () => (
@@ -94,8 +95,21 @@ class Otp extends Component {
                 color: 'black',
                 fontFamily: 'PTSans-Bold',
               }}>
-              Enter OTP code here
+              Enter One Time Password !
             </Text>
+          </View>
+          <View
+            style={{
+              // backgroundColor: 'red'
+              justifyContent: 'flex-end',
+            }}>
+            <Image
+              source={require('../Images/otp.png')}
+              style={{
+                height: Dimensions.get('screen').height / 4,
+                width: Dimensions.get('screen').width / 1,
+              }}
+            />
           </View>
           <View
             style={{

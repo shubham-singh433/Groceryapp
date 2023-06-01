@@ -12,114 +12,61 @@ import {RFValue} from 'react-native-responsive-fontsize';
 import {CheckBox, Header, Icon} from 'react-native-elements';
 import {FlatList} from 'react-native';
 import {TextInput} from 'react-native-gesture-handler';
-const Data = [
-  {
-    id: 1,
-    name: 'Orange',
-    tag: 'fruit & vegetable',
-    qunat: '1 kg',
-    url: require('../Images/orange.jpg'),
-    price: '140 ₹',
-    text: 'Fresh and natural ',
-    color: '#f2962c',
-
-    // price: '120 ₹',
-    // url:require('../Images/avocado')
-  },
-  {
-    id: 2,
-    name: ' Pomogranate',
-    tag: 'fruit & vegetable',
-    qunat: '1 kg',
-    price: '120 ₹',
-    url: require('../Images/pomegranate.jpg'),
-    text: 'Fresh and natural ',
-    color: '#cf4836',
-    // url: require('../Images/'),
-  },
-  {
-    id: 3,
-    name: 'Berry',
-    tag: 'fruit & vegetable',
-    qunat: '1 kg',
-    price: '120 ₹',
-    url: require('../Images/fruits1.jpg'),
-    text: 'Fresh and natural ',
-    color: '#893fab',
-  },
-  {
-    id: 4,
-    name: 'Kiwi',
-    tag: 'fruit & vegetable',
-    qunat: '1 kg',
-    price: '120 ₹',
-    url: require('../Images/kiwi.jpg'),
-    text: 'Fresh and natural ',
-    color: '#4fe86b',
-  },
-  {
-    id: 5,
-    name: 'Lemon',
-    tag: 'fruit & vegetable',
-    qunat: '1 kg',
-    price: '120 ₹',
-    url: require('../Images/lemon.jpg'),
-    text: 'Fresh and natural ',
-    color: '#f7e136',
-  },
-  {
-    id: 6,
-    name: 'Strawberries',
-    tag: 'fruit & vegetable',
-    qunat: '1 kg',
-    price: '120 ₹',
-    url: require('../Images/strawberries.jpg'),
-    text: 'Fresh and natural ',
-    color: '#d14558',
-  },
-];
-class Search extends Component {
+class Products extends Component {
   constructor(props) {
     super(props);
-    console.warn(this.props);
+    console.warn('message for props', this.props);
     this.state = {
       search: '',
-      liked: false,
-      liked_items: [],
-      // subcategory_link: this.props.route.params.link,
+      subcategory_link: this.props.route.params.link,
+      data: [],
+      page: '1',
     };
   }
 
-  // componentDidMount() {
-  //   this.fetchDetails(this.props.route.params.link);
-  // }
+  componentDidMount() {
+    this.fetchDetails(this.props.route.params.link);
+    this.focusListener = this.props.navigation.addListener('focus', () => {
+      this.fetchDetails(this.props.route.params.link);
+    });
+  }
 
-  // fetchDetails = e => {
-  //   alert('Fetching details');
-  //   fetch(global.api_key + 'fetch-product-list-web', {
-  //     method: 'POST',
-  //     headers: {
-  //       Accept: 'application/json',
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({
-  //       category_link: 'all',
-  //       subcategory_link: e,
-  //     }),
-  //   })
-  //     .then(response => response.json())
-  //     .then(json => {
-  //       console.warn('productlist', json);
-  //     })
-  //     .catch(error => {
-  //       console.log(error);
-  //     })
-  //     .finally(() => {
-  //       this.setState({
-  //         isloading: false,
-  //       });
-  //     });
-  // };
+  fetchDetails = e => {
+    // console.warn('Fetching details', e);
+    fetch(global.api_key + 'get-product-list-web', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        category_link: 'all',
+        subcategory_link: e,
+        page: this.state.page,
+      }),
+    })
+      .then(response => response.json())
+      .then(json => {
+        // console.warn('data', json);
+        if (json.status) {
+          this.setState({
+            data: json.data.data,
+          });
+        } else {
+          this.setState({
+            data: [],
+          });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      })
+      .finally(() => {
+        this.setState({
+          isloading: false,
+        });
+      });
+  };
 
   renderListItemsMenu = ({item}) => (
     <View
@@ -128,7 +75,7 @@ class Search extends Component {
         justifyContent: 'center',
         // alignItems: 'center',
         alignContent: 'center',
-        marginVertical: 50,
+        marginVertical: 60,
 
         width: Dimensions.get('screen').width / 2.2,
         height: Dimensions.get('screen').height / 5.2,
@@ -183,17 +130,16 @@ class Search extends Component {
             )}
           </Pressable>
         </View>
-
         <Image
           style={{
             // marginTop: 10,
             alignSelf: 'center',
             // borderRadius: 20,
-            width: Dimensions.get('screen').width / 2.3,
-            height: Dimensions.get('screen').height / 4.6,
+            width: Dimensions.get('screen').width / 6,
+            height: Dimensions.get('screen').height / 6.1,
             // marginBottom: 3,
           }}
-          source={item.url}
+          source={{uri: global.img_url + item.picture[0].src}}
         />
       </View>
       <View
@@ -202,6 +148,7 @@ class Search extends Component {
           alignItems: 'center',
           backgroundColor: 'white',
           width: Dimensions.get('screen').width / 2.2,
+          height: Dimensions.get('screen').height / 13,
 
           // borderBottomLeftRadius: 20,
           // borderBottomRightRadius: 20,
@@ -212,7 +159,7 @@ class Search extends Component {
         <Text
           style={{
             fontFamily: 'Alkatra-Bold',
-            fontSize: RFValue(12, 580),
+            fontSize: RFValue(10, 580),
             color: 'black',
             fontFamily: 'PTSans-Bold',
             justifyContent: 'flex-start',
@@ -225,10 +172,22 @@ class Search extends Component {
             textAlign: 'center',
 
             fontFamily: 'PTSans-Bold',
-            fontSize: RFValue(10, 580),
+            fontSize: RFValue(11, 580),
             color: 'green',
           }}>
-          {item.tag}
+          ₹{item.price}
+          <Text
+            style={{
+              textDecorationLine: 'line-through',
+              paddingHorizontal: 10,
+              textAlign: 'center',
+              fontFamily: 'PTSans-Bold',
+              fontSize: RFValue(11, 580),
+              color: 'red',
+              marginLeft: 10,
+            }}>
+            / ₹{item.market_price}
+          </Text>
         </Text>
       </View>
       <Pressable
@@ -242,7 +201,7 @@ class Search extends Component {
             height: Dimensions.get('screen').height / 20,
             borderBottomLeftRadius: 15,
             borderBottomRightRadius: 15,
-            backgroundColor: item.color,
+            backgroundColor: 'green',
             alignItems: 'center',
             justifyContent: 'center',
           }}>
@@ -308,7 +267,7 @@ class Search extends Component {
             }}
           />
 
-          <View
+          {/* <View
             style={{
               paddingVertical: 20,
               paddingLeft: 10,
@@ -341,7 +300,8 @@ class Search extends Component {
                 </Pressable>
               </View>
               <TextInput
-                value={this.state.search}
+                value="heloo"
+                // {this.state.search}
                 onChangeText={text => {
                   this.setState({
                     search: text,
@@ -392,27 +352,28 @@ class Search extends Component {
                 <Icon name="filter" type="ionicon" size={30} />
               </Pressable>
             </View>
-          </View>
+          </View> */}
           {/*  text showing for search and name of search */}
-          <View style={{}}>
-            {this.state.search.length > 0 ? (
-              <Text
-                style={{
-                  paddingLeft: 10,
-                  fontSize: RFValue(15, 580),
-                  fontWeight: '600',
-                }}>
-                Search Result for {this.state.search}
-              </Text>
-            ) : (
-              <View></View>
-            )}
+          <View
+            style={{
+              justifyContent: 'center',
+              alignSelf: 'flex-start',
+              paddingLeft: 20,
+            }}>
+            <Text
+              style={{
+                fontSize: RFValue(12, 580),
+                color: 'black',
+                fontFamily: 'PTSans-Bold',
+              }}>
+              {this.props.route.params.link}
+            </Text>
           </View>
           <View
             style={{
               justifyContent: 'center',
               alignSelf: 'center',
-              marginBottom: 10,
+              paddingBottom: 30,
               // paddingBottom: -30,
             }}>
             <FlatList
@@ -421,9 +382,17 @@ class Search extends Component {
               keyExtractor={item => {
                 '#' + item.id;
               }}
-              data={Data}
+              data={this.state.data}
               numColumns={2}
               renderItem={this.renderListItemsMenu}
+              // onEndReachedThreshold={0.4}
+              onEndReached={() => {
+                console.warn('reached the end');
+                this.setState({
+                  page: this.state.page + 1,
+                });
+                this.fetchDetails(this.state.subcategory_link);
+              }}
             />
           </View>
         </ScrollView>
@@ -431,5 +400,4 @@ class Search extends Component {
     );
   }
 }
-
-export default Search;
+export default Products;
