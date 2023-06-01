@@ -12,9 +12,9 @@ The Grocery App is a mobile application that allows users to conveniently shop f
 - Manage user account, including profile information and order history
 
 ## Screenshots
-![Screenshot 1](screenshots/1.png)
-![Screenshot 2](screenshots/2.png)
-![Screenshot 3](screenshots/3.png)
+![Screenshot 1](screenshot/1.png)
+![Screenshot 2](screenshot/2.png)
+![Screenshot 3](screenshot/3.png)
 
 Include some screenshots or GIFs of your app to showcase its interface and features. You can create a separate folder in your repository to store these assets.
 
