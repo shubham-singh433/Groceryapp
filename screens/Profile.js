@@ -1,10 +1,38 @@
 import React, {Component} from 'react';
-import {ScrollView, View, Text, Image, TextInput} from 'react-native';
+import {ScrollView, View, Text, Image, TextInput, Alert} from 'react-native';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {Header, Icon} from 'react-native-elements';
 import {Dimensions} from 'react-native';
 import {Pressable} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 export class Profile extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: '',
+      email: '',
+    };
+  }
+  componentDidMount() {
+    this.getData();
+  }
+  getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@name');
+      const mail = await AsyncStorage.getItem('@email');
+      console.warn(value);
+      if (value !== null && mail !== null) {
+        // value previously stored
+        this.setState({
+          name: value,
+          email: mail,
+        });
+      }
+    } catch (e) {
+      // error reading value
+      console.warn(e);
+    }
+  };
   renderLeftcomponent = () => (
     <View style={{alignItems: 'flex-start'}}>
       <Pressable
@@ -79,6 +107,12 @@ export class Profile extends Component {
                   borderRadius: 15,
                   justifyContent: 'center',
                 }}
+                value={this.state.name}
+                onChangeText={value => {
+                  this.setState({
+                    name: value,
+                  });
+                }}
               />
             </View>
             <View>
@@ -92,6 +126,7 @@ export class Profile extends Component {
                   borderRadius: 15,
                   justifyContent: 'center',
                 }}
+                value={this.state.email}
               />
             </View>
           </View>

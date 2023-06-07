@@ -5,12 +5,55 @@ import {Dimensions} from 'react-native';
 import {RFValue} from 'react-native-responsive-fontsize';
 import {Icon, Header} from 'react-native-elements';
 import {Alert} from 'react-native';
+import {Image} from 'react-native-elements';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 class CreateNew extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: ' ',
+      name: '',
+      validmail: false,
+      validname: false,
+    };
+  }
   renderLeftcomponent = () => (
     <View style={{alignItems: 'flex-start'}}>
       <Icon name="chevron-back-outline" type="ionicon" size={25} />
     </View>
   );
+
+  nameRegx = () => {
+    var re = /^[a-z ,.'-]+$/i;
+    var isvalid = re.test(this.state.name);
+    console.warn(isvalid);
+    if (isvalid) {
+      this.setState({
+        validname: true,
+      });
+    }
+  };
+  emailRegx = () => {
+    var re = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/;
+    var isvalid = re.test(this.state.email);
+    console.warn(isvalid);
+    if (isvalid) {
+      this.setState({
+        validmail: true,
+      });
+    }
+  };
+
+  storeData = async value => {
+    try {
+      // Alert.alert('hello');
+      await AsyncStorage.setItem('@name', this.state.name);
+      await AsyncStorage.setItem('@email', this.state.email);
+    } catch (e) {
+      console.warn(e);
+    }
+  };
+
   render() {
     return (
       <View style={styles.external_conatiner}>
@@ -21,13 +64,6 @@ class CreateNew extends Component {
               backgroundColor: 'white',
               // backgroundColor: '#fff',
               borderRadius: 20,
-              // shadowColor: 'black',
-              // // shadowOffset: {width: -4, height: 4},
-              // shadowOpacity: 1,
-              // shadowRadius: 15,
-              // elevation: 10,
-              // justifyContent: 'center',rr
-              // height: Dimensions.get('screen').height / 10,
             }}
           />
 
@@ -35,14 +71,15 @@ class CreateNew extends Component {
             <Text style={styles.sign_intext}> Create New Account</Text>
             <Text
               style={{
-                fontSize: RFValue(16, 580),
-                color: 'black',
-                marginLeft: 12,
+                fontSize: RFValue(13, 580),
+                color: '#a3a0a0',
+                paddingLeft: 12,
                 fontFamily: 'PTSans-Bold',
               }}>
               Enter your details to create account
             </Text>
           </View>
+
           <View style={styles.content_container}>
             <View style={{backgroundColor: 'white'}}>
               <Text style={styles.email_text}>Name</Text>
@@ -50,7 +87,30 @@ class CreateNew extends Component {
                 keyboardType="default"
                 style={styles.email_input}
                 placeholder="Name"
+                value={this.name}
+                onBlur={this.nameRegx}
+                onChangeText={value => {
+                  this.setState({
+                    name: value,
+                  });
+                  // console.warn(this.state.name);
+                }}
               />
+              {!this.state.validname ? (
+                <View>
+                  <Text
+                    style={{
+                      fontFamily: 'PTSans-Bold',
+                      fontSize: RFValue(12, 580),
+
+                      color: 'red',
+                    }}>
+                    Enter a valid name
+                  </Text>
+                </View>
+              ) : (
+                <View></View>
+              )}
             </View>
             <View style={{backgroundColor: 'white'}}>
               <Text style={styles.pswd_text}>Email Address</Text>
@@ -58,8 +118,30 @@ class CreateNew extends Component {
                 keyboardType="default"
                 style={styles.pswd_input}
                 placeholder="Email"
-                pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+                value={this.email}
+                onChangeText={value => {
+                  this.setState({
+                    email: value,
+                  });
+                  // console.warn(this.state.email);
+                }}
+                onBlur={this.emailRegx}
               />
+              {!this.state.validmail ? (
+                <View style={{width: Dimensions.get('screen').width / 1.1}}>
+                  <Text
+                    style={{
+                      fontFamily: 'PTSans-Bold',
+                      fontSize: RFValue(12, 580),
+
+                      color: 'red',
+                    }}>
+                    Enter a valid email
+                  </Text>
+                </View>
+              ) : (
+                <View></View>
+              )}
             </View>
           </View>
           <View
@@ -70,8 +152,10 @@ class CreateNew extends Component {
               alignContent: 'center',
             }}>
             <Pressable
+              disabled={!(this.state.validmail && this.state.validname)}
               onPress={() => {
-                Alert.alert('Welcome to FOGRO');
+                this.storeData();
+                // Alert.alert('Welcome to FOGRO');
                 this.props.navigation.navigate('Login');
               }}
               style={{
@@ -116,7 +200,7 @@ const styles = StyleSheet.create({
   },
 
   sign_intext: {
-    fontSize: RFValue(20, 580),
+    fontSize: RFValue(25, 580),
     margin: 4,
     fontWeight: '800',
     fontFamily: 'PTSans-Bold',

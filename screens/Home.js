@@ -6,6 +6,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {RFValue} from 'react-native-responsive-fontsize';
 import SwiperImages from './SwiperImages';
 import HorizontalFlatList from './HorizontalFlatList';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // import Geolocation from '@react-native-community/geolocation';
 // navigator.geolocation = require('@react-native-community/geolocation');
 
@@ -18,6 +19,8 @@ class Home extends Component {
     super(props);
     this.state = {
       search: '',
+      name: '',
+      address: '',
     };
 
     fetch_category = () => {
@@ -53,9 +56,41 @@ class Home extends Component {
   }
 
   componentDidMount() {
+    this.getData();
     // Geolocation.getCurrentPosition(info => console.log(info));
   }
+  setAddress = value => {
+    this.setState({
+      address: value,
+    });
+  };
+  getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@name');
+      const address = await AsyncStorage.getItem('@address');
+      console.warn(value);
+      if (value !== null) {
+        // value previously stored
+        this.setState({
+          name: value,
+        });
+        if (address != null) {
+          this.setState({
+            address: address,
+          });
+        }
+      }
+    } catch (e) {
+      // error reading value
+      console.warn(e);
+    }
+  };
 
+  setAddress(value) {
+    this.setState({
+      address: value,
+    });
+  }
   renderLeftComponent = () => (
     // <View style={styles.header}>
     <View
@@ -77,8 +112,7 @@ class Home extends Component {
             fontFamily: 'PTSans-Bold',
             color: 'black',
           }}>
-          Hello
-          {/* ,{this.props.user} */}
+          Welcome {this.state.name}
         </Text>
         <Text
           style={{
@@ -86,7 +120,7 @@ class Home extends Component {
             fontFamily: 'PTSans-Bold',
             color: 'black',
           }}>
-          Dehradun,Uttarakhand
+          {this.state.address}
         </Text>
       </View>
     </View>

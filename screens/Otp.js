@@ -17,8 +17,13 @@ import CountDown from 'react-native-countdown-component';
 class Otp extends Component {
   constructor(props) {
     super(props);
+    console.warn(this.props.route.params.number);
     this.state = {
       countdown: true,
+      number: this.props.route.params.number,
+      loader: true,
+      token: '',
+      otp: '',
     };
   }
   renderCentralComponent = () => (
@@ -48,6 +53,52 @@ class Otp extends Component {
       </View>
     </Pressable>
   );
+
+  storeData = async value => {
+    try {
+      // Alert.alert('hello');
+      await AsyncStorage.setItem('@token', this.state.token);
+    } catch (e) {
+      console.warn(e);
+    }
+  };
+
+  Otpvarify = e => {
+    console.warn(this.state.otp);
+    this.setState({loader: true});
+    fetch(global.verification + 'staff-otp-verification', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        contact: this.state.number,
+        otp: e,
+      }),
+    })
+      .then(response => response.json())
+      .then(json => {
+        console.warn(json);
+        if (json.msg == 'ok') {
+          this.setState({
+            token: json.token,
+          });
+          this.storeData();
+          this.props.navigation.navigate('Home');
+        } else {
+          alert('invalid');
+        }
+      })
+      .catch(err => {
+        console.warn(err);
+      })
+      .finally(() => {
+        this.setState({
+          loader: false,
+        });
+      });
+  };
 
   // header right component
   renderRightComponent = () => (
@@ -122,11 +173,11 @@ class Otp extends Component {
               // backgroundColor: 'red',
             }}>
             <OTPTextInput
-              inputCount={4}
+              inputCount={6}
               textInputStyle={{
                 // backgroundColor: 'red',
-                width: 80,
-                height: 80,
+                width: 55,
+                height: 55,
                 borderWidth: 1,
                 borderRadius: 10,
                 // paddingHorizontal: 8,
@@ -137,13 +188,15 @@ class Otp extends Component {
 
                 paddingHorizontal: '5%',
               }}
-              handleTextChange={text => {
-                if (text.length === 4) {
-                  if (text === '4321') {
-                    this.props.navigation.navigate('Home');
-                  } else {
-                    alert('OTP is invalid');
-                  }
+              handleTextChange={value => {
+                if (value.length === 6) {
+                  this.setState({otp: value});
+                  this.Otpvarify(value);
+                  //   if (text === '4321') {
+                  //     this.props.navigation.navigate('Home');
+                  //   } else {
+                  //     alert('OTP is invalid');
+                  //   }
                 }
               }}
             />

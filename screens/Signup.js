@@ -18,8 +18,47 @@ class Signup extends Component {
     super(props);
     this.state = {
       number: '',
+      validnumber: false,
+      loader: false,
     };
   }
+  validatenumber = () => {
+    var re = /^[1-9]\d*$/;
+    var isvalid = re.test(this.state.number);
+    if (isvalid) {
+      this.setState({validnumber: true});
+    }
+  };
+
+  registernumber = () => {
+    this.setState({loader: true});
+    fetch(global.verification + 'staff-mobile-verification', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        contact: this.state.number,
+        verification_type: 'vendor',
+      }),
+    })
+      .then(response => response.json())
+      .then(json => {
+        if (json.msg == 'ok') {
+          this.props.navigation.navigate('Otp', {number: this.state.number});
+        }
+      })
+      .catch(err => {
+        console.warn(err);
+      })
+      .finally(() => {
+        this.setState({
+          loader: false,
+        });
+      });
+  };
+
   render() {
     return (
       <View style={{flex: 1, backgroundColor: 'white'}}>
@@ -91,9 +130,7 @@ class Signup extends Component {
                       number: text,
                     });
               }}
-              // onChangeText={e => {
-              //   this.setState({number: e});
-              // }}
+              onBlur={this.validatenumber}
               keyboardType="number-pad"
               style={{
                 width: '70%',
@@ -108,34 +145,48 @@ class Signup extends Component {
             />
             {/* <Text>{this.state.number}</Text> */}
           </View>
-          <View
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              paddingTop: 10,
-            }}>
-            <Pressable
-              onPress={() => {
-                this.props.navigation.navigate('Otp');
-              }}
-              style={{
-                backgroundColor: '#2AC07E',
-                width: Dimensions.get('screen').width / 1.1,
-                height: Dimensions.get('screen').height / 16,
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: 50,
-              }}>
+          {!this.state.validnumber ? (
+            <View>
               <Text
                 style={{
-                  color: 'white',
-                  fontSize: RFValue(18, 580),
-                  fontWeight: '600',
+                  fontFamily: 'PTSans-Bold',
+                  fontSize: RFValue(15, 580),
+                  textAlign: 'center',
+                  color: 'red',
                 }}>
-                Confirm
+                Not a valid number
               </Text>
-            </Pressable>
-          </View>
+            </View>
+          ) : (
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                paddingTop: 10,
+              }}>
+              <Pressable
+                onPress={() => {
+                  this.registernumber();
+                }}
+                style={{
+                  backgroundColor: '#2AC07E',
+                  width: Dimensions.get('screen').width / 1.1,
+                  height: Dimensions.get('screen').height / 16,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: 50,
+                }}>
+                <Text
+                  style={{
+                    color: 'white',
+                    fontSize: RFValue(18, 580),
+                    fontWeight: '600',
+                  }}>
+                  Confirm
+                </Text>
+              </Pressable>
+            </View>
+          )}
         </ScrollView>
       </View>
     );

@@ -28,6 +28,7 @@ const Stack = createNativeStackNavigator();
 global.google_key = 'AIzaSyAb52gzLmGK62in6hPYwulzvjK6xho5sk8';
 global.api_key = 'https://api.kiranmegamarket.in/api/';
 global.img_url = 'https://cdn.kiranmegamarket.in/';
+global.verification = 'https://beta-dine-api.weazy.in/api/';
 class App extends Component {
   constructor(props) {
     super(props);
@@ -57,8 +58,7 @@ class App extends Component {
         <NavigationContainer>
           <Stack.Navigator
             screenOptions={{headerShown: false}}
-            // initialRouteName="Home"
-          >
+            initialRouteName="Swipers">
             <Stack.Screen name="Swipers" component={Swipers} />
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Otp" component={Otp} />

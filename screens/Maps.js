@@ -15,6 +15,7 @@ import {
 import {Icon} from 'react-native-elements';
 import {RFValue} from 'react-native-responsive-fontsize';
 import MapView from 'react-native-maps';
+import {Marker, Callout, Circle} from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 navigator.geolocation = require('@react-native-community/geolocation');
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
@@ -25,8 +26,10 @@ class Maps extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      latitudeX: 37.4226711,
-      longitudeY: -122.0849872,
+      latitudeX: 30.3165,
+      longitudeY: 78.0322,
+      address: '',
+      // addressSetter: this.props.route.params.setaddress(),
     };
   }
   requestLocationPermission = async () => {
@@ -47,7 +50,14 @@ class Maps extends Component {
       console.warn(err);
     }
   };
-
+  storeData = async value => {
+    try {
+      // Alert.alert('hello');
+      await AsyncStorage.setItem('@address', this.state.address);
+    } catch (e) {
+      console.warn(e);
+    }
+  };
   componentDidMount() {
     this.requestLocationPermission();
     Geolocation.getCurrentPosition(info => console.log(info));
@@ -68,6 +78,7 @@ class Maps extends Component {
           }}>
           <Pressable
             onPress={() => {
+              this.storeData;
               this.props.navigation.navigate('Home');
             }}>
             <Icon name="chevron-back-outline" type="ionicon" size={32} />
@@ -79,7 +90,12 @@ class Maps extends Component {
             listViewDisplayed={'auto'} // true/false/undefined
             onPress={(data, details = null) => {
               // 'details' is provided when fetchDetails = true
-              console.log(data, details);
+              this.setState({
+                latitudex: details.geometry.location.lat,
+                longitudeY: details.geometry.location.lng,
+                address: details.formatted_address,
+              });
+              this.storeData;
             }}
             keyboardShouldPersistTaps={'handled'}
             query={{
@@ -87,6 +103,7 @@ class Maps extends Component {
               language: 'en',
             }}
             currentLocation={true}
+            currentLocationLabel="current location"
             styles={{
               description: {
                 fontWeight: 'bold',
@@ -111,19 +128,48 @@ class Maps extends Component {
 
         <MapView
           region={{
-            latitude: 37.4226711,
-            longitude: -122.0849872,
+            latitude: this.state.latitudeX,
+            longitude: this.state.longitudeY,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}
           style={{
             height: '100%',
             width: '100%',
-          }}
-        />
-        {/* <View style={{zIndex: 2}}> */}
-
-        {/* </View> */}
+          }}>
+          <Marker
+            coordinate={{
+              latitude: this.state.latitudeX,
+              longitude: this.state.longitudeY,
+            }}
+            // onDragStart={e => {
+            //   console.warn('drag start', e.nativeEvent.coordinate);
+            // }}
+            onDragEnd={e => {
+              console.warn('drag end', e.nativeEvent.coordinate);
+              this.setState({
+                latitudeX: e.nativeEvent.coordinate.latitude,
+                longitudeY: e.nativeEvent.coordinate.longitude,
+              });
+            }}
+            draggable={true}
+            title="Test Title"
+            description="test description"
+            pinColor="gold">
+            <Callout>
+              <Text>This is callout</Text>
+            </Callout>
+          </Marker>
+          <Circle
+            center={{
+              latitude: this.state.latitudeX,
+              longitude: this.state.longitudeY,
+            }}
+            strokeWidth={2}
+            strokeColor="grey"
+            radius={500}
+          />
+        </MapView>
       </View>
     );
   }
